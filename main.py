@@ -5,7 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 
-class AnimeNotesApp(App):
+class AnimeHubApp(App):
     def build(self):
         self.root_layout = BoxLayout(orientation='vertical')
         
@@ -31,4 +31,4 @@ class AnimeNotesApp(App):
         self.anime_list.add_widget(Label(text='Добавлено аниме', size_hint_y=None, height=40))
 
 if __name__ == '__main__':
-    AnimeNotesApp().run()
+    AnimeHubApp().run()
