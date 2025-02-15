@@ -10,7 +10,7 @@ class AnimeNotesApp(App):
         self.root_layout = BoxLayout(orientation='vertical')
         
         # Заголовок
-        self.root_layout.add_widget(Label(text='Мои аниме заметки', size_hint_y=None, height=50))
+        self.root_layout.add_widget(Label(text='Список добавленных тайтлов', size_hint_y=None, height=50))
         
         # Область списка аниме
         self.scroll_view = ScrollView()
@@ -20,7 +20,7 @@ class AnimeNotesApp(App):
         self.root_layout.add_widget(self.scroll_view)
         
         # Кнопка добавления аниме
-        self.add_anime_btn = Button(text='Добавить аниме', size_hint_y=None, height=50)
+        self.add_anime_btn = Button(text='+', size_hint_y=None, height=50)
         self.add_anime_btn.bind(on_press=self.add_anime)
         self.root_layout.add_widget(self.add_anime_btn)
         
