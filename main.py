@@ -13,6 +13,7 @@ from database import AnimeDatabase
 class AnimeHubApp(App):
     def build(self):
         self.db = AnimeDatabase()  # Подключаем базу данных
+        self.popup = None  # Инициализация pop-up окна
 
         self.root_layout = BoxLayout(orientation='vertical')
 
@@ -51,15 +52,21 @@ class AnimeHubApp(App):
 
     def load_anime(self):
         """Загружает сохранённые аниме в интерфейс"""
+        self.anime_list.clear_widgets()  # Очищаем список перед загрузкой новых данных
         for anime in self.db.get_all_anime():
             anime_id, title, description, banner, trailer, link = anime  # Распаковка данных
             self.anime_list.add_widget(Label(text=f"{title}: {description}", size_hint_y=None, height=40))
 
     def add_anime(self, title, description, banner, trailer, link):
-        """Добавляет аниме в базу и в интерфейс"""
-        self.db.add_anime(title, description, banner, trailer, link)  # Запись в БД
-        self.anime_list.add_widget(Label(text=f"{title}: {description}", size_hint_y=None, height=40))
-        self.popup.dismiss()  # Закрываем окно формы
+        """Добавляет аниме в базу и обновляет список"""
+        try:
+            self.db.add_anime(title, description, banner, trailer, link)  # Запись в БД
+            self.load_anime()  # Перезагружаем список аниме
+        except Exception as e:
+            print(f"Ошибка при добавлении в БД: {e}")  # Логируем ошибку, чтобы отладить
+        finally:
+            if self.popup:
+                self.popup.dismiss()  # Закрываем окно формы, если оно открыто
 
     def update_rounded_rect(self, instance, value):
         """Обновляет положение и размер скругленного фона кнопки"""
@@ -68,8 +75,9 @@ class AnimeHubApp(App):
 
     def open_add_anime_form(self, instance):
         """Открывает форму добавления аниме"""
-        self.popup = Popup(title='Добавить аниме', content=AddAnimeForm(self), size_hint=(0.8, 0.8))
-        self.popup.open()
+        if self.popup is None or not self.popup.open:  # Проверяем, чтобы не было дублирования формы
+            self.popup = Popup(title='Добавить аниме', content=AddAnimeForm(self), size_hint=(0.8, 0.8))
+            self.popup.open()
 
 
 if __name__ == '__main__':
